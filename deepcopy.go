@@ -4,6 +4,8 @@ import (
 	"bytes"
 	"encoding/gob"
 	"encoding/json"
+
+	"github.com/bytedance/sonic"
 )
 
 type AuthorInfo struct {
@@ -37,6 +39,17 @@ func DeepCopyByJson(src []*Book) ([]*Book, error) {
 	}
 
 	err = json.Unmarshal(b, &dst)
+	return dst, err
+}
+
+func DeepCopyBySonic(src []*Book) ([]*Book, error) {
+	dst := make([]*Book, len(src))
+	b, err := sonic.Marshal(src)
+	if err != nil {
+		return nil, err
+	}
+
+	err = sonic.Unmarshal(b, &dst)
 	return dst, err
 }
 
